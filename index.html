@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>360 Viewer</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #container { width: 100vw; height: 100vh; }
+
+    /* 固定ボタンエリア */
+    .control-buttons {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000; /* 360画像の上に出す */
+    }
+
+    button {
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+  
+  
+</head>
+<body>
+  <div id="container"></div>
+
+  <!-- 固定ボタン -->
+  <div class="control-buttons">
+    <button id="btn-minami">南庭</button>
+    <button id="btn-minami-east">南東</button>
+    <button id="btn-genkan">玄関</button>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.105.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+
+<script>
+  const container = document.querySelector('#container');
+
+  // ★ 標準UIを表示する設定を追加
+  const viewer = new PANOLENS.Viewer({
+    container: container,
+    controlBar: true,         // ← UI（設定・info・fullscreenなど）を有効化
+    autoHideInfospot: false,  // Infospotが隠れないように
+    horizontalView: false,
+    output: 'console'         // デバッグログが出る
+  });
+
+  // パノラマ画像
+  const panoMinami = new PANOLENS.ImagePanorama('niwa_minami.jpg');
+  const panoMinamiEast = new PANOLENS.ImagePanorama('niwa_minami_east.jpg');
+  const panoGenkan = new PANOLENS.ImagePanorama('genkan.jpg');
+
+  // 最初のシーン
+  viewer.add(panoMinami, panoMinamiEast, panoGenkan);
+  viewer.setPanorama(panoMinami);
+
+  // ボタン操作
+  document.getElementById('btn-minami').addEventListener('click', () => viewer.setPanorama(panoMinami));
+  document.getElementById('btn-minami-east').addEventListener('click', () => viewer.setPanorama(panoMinamiEast));
+  document.getElementById('btn-genkan').addEventListener('click', () => viewer.setPanorama(panoGenkan));
+</script>
+
+</body>
+</html>
